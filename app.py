@@ -3,15 +3,25 @@ import pandas as pd
 import socket
 import os
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 # Path to the Excel file in the same directory
-EXCEL_FILE_PATH = os.path.join(os.path.dirname(__file__), "data.xlsx")
+EXCEL_FILE_PATH = os.path.join(os.path.dirname(_file_), "data.xlsx")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     result = None
     error = None
+    names = []
+
+    # Read names from the Excel file
+    try:
+        df = pd.read_excel(EXCEL_FILE_PATH)
+        if "Name" in df.columns:
+            names = df["Name"].drop_duplicates().tolist()
+    except Exception as e:
+        error = f"Error reading the file: {e}"
+
     if request.method == 'POST':
         if 'resolve_dns' in request.form:
             # DNS to IP
@@ -53,7 +63,7 @@ def index():
             except Exception as e:
                 error = f"Error reading the file: {e}"
 
-    return render_template('index.html', result=result, error=error)
+    return render_template('index.html', result=result, error=error, names=names)
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     app.run(debug=True)
