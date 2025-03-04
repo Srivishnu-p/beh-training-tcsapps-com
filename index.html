@@ -1,101 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Genie - Login</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            height: 100vh;
-        }
-        .login-container {
-            width: 300px;
-            margin: auto;
-            background-color: #222;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-        }
-        .header {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .error {
-            color: #fff;
-            background-color: #e74c3c;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
-        }
-        input[type="checkbox"] {
-            margin-right: 5px;
-        }
-        .button-container {
-            margin-top: 15px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        .powered-by {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #aaa;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNS and IP Resolver</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000; /* Black background */
+      color: #00ff00; /* Green text */
+      font-family: 'Courier New', monospace; /* Monospace font */
+    }
+    .container {
+      max-width: 1200px;
+      margin-top: 50px;
+    }
+    .section {
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 255, 0, 0.1); /* Green shadow */
+      background-color: #111; /* Dark gray background for sections */
+    }
+    .btn-primary {
+      background-color: #00ff00; /* Green button */
+      color: #000; /* Black text */
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #00cc00; /* Darker green on hover */
+    }
+    .result-box {
+      background-color: #000; /* Black background */
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 20px;
+      border: 1px solid #00ff00; /* Green border */
+    }
+    textarea {
+      width: 100%;
+      height: 150px; /* Larger text area */
+      resize: vertical; /* Allow vertical resizing */
+      background-color: #000; /* Black background */
+      color: #00ff00; /* Green text */
+      border: 1px solid #00ff00; /* Green border */
+      font-family: 'Courier New', monospace; /* Monospace font */
+    }
+    input[type="text"] {
+      background-color: #000; /* Black background */
+      color: #00ff00; /* Green text */
+      border: 1px solid #00ff00; /* Green border */
+      font-family: 'Courier New', monospace; /* Monospace font */
+    }
+    .alert-danger {
+      background-color: #330000; /* Dark red background */
+      color: #ff4444; /* Light red text */
+      border: 1px solid #ff4444; /* Light red border */
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="header">PDF Genie</div>
-        <div class="error">Invalid username or password.</div>
-        <form>
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Username">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password">
-            <label>
-                <input type="checkbox" name="remember"> Remember me
-            </label>
-            <div class="button-container">
-                <button type="submit">Sign in</button>
-            </div>
+  <div class="container">
+    <h1 class="text-center mb-4">Rescan Helper</h1>
+    <div class="split-layout">
+      <!-- Left Section: DNS and IP Resolver -->
+      <div class="section">
+        <h2 class="text-center mb-4">DNS and IP Resolver</h2>
+        <form method="POST">
+          <div class="form-group">
+            <label for="input_data">Enter DNS names or IPs (one per line or comma-separated):</label>
+            <textarea class="form-control" name="input_data" placeholder="e.g., example.com, 8.8.8.8"></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" name="resolve_dns" class="btn btn-primary mr-2">Resolve DNS to IP</button>
+            <button type="submit" name="resolve_ip" class="btn btn-primary">Resolve IP to DNS</button>
+          </div>
         </form>
+
+        <!-- Display Results or Errors for DNS/IP Resolver -->
+        {% if request.method == 'POST' and ('resolve_dns' in request.form or 'resolve_ip' in request.form) %}
+          {% if error %}
+            <div class="alert alert-danger mt-4" role="alert">
+              <strong>Error:</strong> {{ error }}
+            </div>
+          {% endif %}
+          {% if result %}
+            <div class="result-box mt-4">
+              <h3>Result:</h3>
+              <p class="lead">{{ result }}</p>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <!-- Right Section: Fetch IPs from Excel -->
+      <div class="section">
+        <h2 class="text-center mb-4">Fetch IPs from Excel</h2>
+        <form method="POST">
+          <div class="form-group">
+            <label for="name_to_search">Enter Name to Search:</label>
+            <input type="text" class="form-control" name="name_to_search" placeholder="e.g., Server1">
+          </div>
+          <div class="text-center">
+            <button type="submit" name="fetch_ips" class="btn btn-primary">Fetch Unique IPs</button>
+          </div>
+        </form>
+
+        <!-- Display Results or Errors for Fetch IPs -->
+        {% if request.method == 'POST' and 'fetch_ips' in request.form %}
+          {% if error %}
+            <div class="alert alert-danger mt-4" role="alert">
+              <strong>Error:</strong> {{ error }}
+            </div>
+          {% endif %}
+          {% if result %}
+            <div class="result-box mt-4">
+              <h3>Result:</h3>
+              <p class="lead">{{ result }}</p>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
     </div>
-    <div class="powered-by">Powered by PDF Genie</div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
