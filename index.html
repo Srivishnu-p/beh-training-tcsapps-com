@@ -47,13 +47,39 @@
       border: 1px solid #00ff00; /* Green border */
       font-family: 'Courier New', monospace; /* Monospace font */
     }
-    select {
+    .combo-box {
+      position: relative;
+      width: 100%;
+    }
+    .combo-box input {
+      width: 100%;
       background-color: #000; /* Black background */
       color: #00ff00; /* Green text */
       border: 1px solid #00ff00; /* Green border */
       font-family: 'Courier New', monospace; /* Monospace font */
-      width: 100%;
       padding: 8px;
+    }
+    .combo-box ul {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: #000; /* Black background */
+      border: 1px solid #00ff00; /* Green border */
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      z-index: 1000;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .combo-box ul li {
+      padding: 8px;
+      cursor: pointer;
+    }
+    .combo-box ul li:hover {
+      background-color: #00ff00; /* Green background on hover */
+      color: #000; /* Black text on hover */
     }
     .alert-danger {
       background-color: #330000; /* Dark red background */
@@ -101,12 +127,15 @@
         <h2 class="text-center mb-4">Fetch IPs from Excel</h2>
         <form method="POST">
           <div class="form-group">
-            <label for="name_to_search">Select Name to Search:</label>
-            <select class="form-control" name="name_to_search">
-              {% for name in names %}
-                <option value="{{ name }}">{{ name }}</option>
-              {% endfor %}
-            </select>
+            <label for="name_to_search">Select or Type Name to Search:</label>
+            <div class="combo-box">
+              <input type="text" id="name_to_search" name="name_to_search" placeholder="e.g., Server1" list="names-list">
+              <datalist id="names-list">
+                {% for name in names %}
+                  <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+              </datalist>
+            </div>
           </div>
           <div class="text-center">
             <button type="submit" name="fetch_ips" class="btn btn-primary">Fetch Unique IPs</button>
