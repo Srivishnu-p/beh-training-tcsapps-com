@@ -47,11 +47,13 @@
       border: 1px solid #00ff00; /* Green border */
       font-family: 'Courier New', monospace; /* Monospace font */
     }
-    input[type="text"] {
+    select {
       background-color: #000; /* Black background */
       color: #00ff00; /* Green text */
       border: 1px solid #00ff00; /* Green border */
       font-family: 'Courier New', monospace; /* Monospace font */
+      width: 100%;
+      padding: 8px;
     }
     .alert-danger {
       background-color: #330000; /* Dark red background */
@@ -62,7 +64,7 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="text-center mb-4">Rescan Helper</h1>
+    <h1 class="text-center mb-4">DNS and IP Resolver</h1>
     <div class="split-layout">
       <!-- Left Section: DNS and IP Resolver -->
       <div class="section">
@@ -99,8 +101,12 @@
         <h2 class="text-center mb-4">Fetch IPs from Excel</h2>
         <form method="POST">
           <div class="form-group">
-            <label for="name_to_search">Enter Name to Search:</label>
-            <input type="text" class="form-control" name="name_to_search" placeholder="e.g., Server1">
+            <label for="name_to_search">Select Name to Search:</label>
+            <select class="form-control" name="name_to_search">
+              {% for name in names %}
+                <option value="{{ name }}">{{ name }}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="text-center">
             <button type="submit" name="fetch_ips" class="btn btn-primary">Fetch Unique IPs</button>
