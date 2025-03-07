@@ -2,11 +2,16 @@ from flask import Flask, request, render_template
 import pandas as pd
 import socket
 import os
+import re
 
 app = Flask(_name_)
 
 # Path to the Excel file in the same directory
 EXCEL_FILE_PATH = os.path.join(os.path.dirname(_file_), "data.xlsx")
+
+def split_input(input_data):
+    # Split input by commas, newlines, or spaces
+    return [item.strip() for item in re.split(r'[,\s\n]+', input_data) if item.strip()]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -26,7 +31,7 @@ def index():
         if 'resolve_dns' in request.form:
             # DNS to IP
             input_data = request.form['input_data']
-            input_list = [item.strip() for item in input_data.split(',') if item.strip()]
+            input_list = split_input(input_data)
             ip_set = set()
             for domain in input_list:
                 try:
@@ -39,7 +44,7 @@ def index():
         elif 'resolve_ip' in request.form:
             # IP to DNS
             input_data = request.form['input_data']
-            input_list = [item.strip() for item in input_data.split(',') if item.strip()]
+            input_list = split_input(input_data)
             dns_set = set()
             for ip in input_list:
                 try:
