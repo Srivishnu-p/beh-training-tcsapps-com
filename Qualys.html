@@ -1,32 +1,48 @@
+import pandas as pd
+
 def read_ips_from_file(filename):
+    """Read IPs from a file and return them as a set."""
     with open(filename, 'r') as file:
         content = file.read()
         # Split by comma and remove any whitespace
         ips = [ip.strip() for ip in content.split(',')]
-        return set(ips)  # Using a set for faster lookups
+        return set(ips)
 
-def find_missing_ips(file1, file2):
-    ips_file1 = read_ips_from_file(file1)
-    ips_file2 = read_ips_from_file(file2)
+def find_missing_ips(target_file, apply_file):
+    """Find IPs in target_file that are not in apply_file."""
+    target_ips = read_ips_from_file(target_file)
+    apply_ips = read_ips_from_file(apply_file)
 
-    # Find IPs in file1 that are not in file2
-    missing_in_file2 = ips_file1 - ips_file2
+    # Find IPs in target_file that are not in apply_file
+    missing_ips = target_ips - apply_ips
+    return missing_ips
 
-    # Find IPs in file2 that are not in file1
-    missing_in_file1 = ips_file2 - ips_file1
+def save_to_excel(missing_ips, output_file):
+    """Save missing IPs to an Excel file with two columns."""
+    # Create a DataFrame with missing IPs and an empty second column
+    df = pd.DataFrame({
+        'Missing IPs (Target)': list(missing_ips),
+        'Placeholder': [''] * len(missing_ips)  # Empty second column
+    })
 
-    return missing_in_file2, missing_in_file1
+    # Save to Excel or CSV
+    if output_file.endswith('.xlsx'):
+        df.to_excel(output_file, index=False)
+    elif output_file.endswith('.csv'):
+        df.to_csv(output_file, index=False)
+    else:
+        raise ValueError("Output file must be .xlsx or .csv")
 
 if _name_ == "_main_":
-    file1 = 'file1.txt'  # Replace with your first file name
-    file2 = 'file2.txt'  # Replace with your second file name
+    # File names
+    target_file = 'target.txt'  # Replace with your target file name
+    apply_file = 'apply.txt'    # Replace with your apply file name
+    output_file = 'output.xlsx' # Output file name (can also be .csv)
 
-    missing_in_file2, missing_in_file1 = find_missing_ips(file1, file2)
+    # Find missing IPs
+    missing_ips = find_missing_ips(target_file, apply_file)
 
-    print("IPs in file1 but not in file2:")
-    for ip in missing_in_file2:
-        print(ip)
+    # Save to Excel or CSV
+    save_to_excel(missing_ips, output_file)
 
-    print("\nIPs in file2 but not in file1:")
-    for ip in missing_in_file1:
-        print(ip)
+    print(f"Missing IPs have been saved to {output_file}")
