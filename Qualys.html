@@ -5,7 +5,7 @@ def read_ips_from_file(filename):
     with open(filename, 'r') as file:
         content = file.read()
         # Split by comma and remove any whitespace
-        ips = [ip.strip() for ip in content.split(',')]
+        ips = [ip.strip() for ip in content.split(',') if ip.strip()]
         return set(ips)
 
 def find_missing_ips(target_file, apply_file):
