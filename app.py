@@ -4,10 +4,10 @@ import socket
 import os
 import re
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Path to the Excel file in the same directory
-EXCEL_FILE_PATH = os.path.join(os.path.dirname(_file_), "data.xlsx")
+EXCEL_FILE_PATH = os.path.join(os.path.dirname(__file__), "data.xlsx")
 
 def split_input(input_data):
     # Split input by commas, newlines, or spaces
@@ -68,7 +68,17 @@ def index():
             except Exception as e:
                 error = f"Error reading the file: {e}"
 
+        elif 'find_duplicates' in request.form:
+            # Find duplicate IPs
+            input_data = request.form['input_data']
+            input_list = split_input(input_data)
+            ip_count = {}
+            for ip in input_list:
+                ip_count[ip] = ip_count.get(ip, 0) + 1
+            duplicates = [ip for ip, count in ip_count.items() if count > 1]
+            result = ", ".join(duplicates)
+
     return render_template('index.html', result=result, error=error, names=names)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
