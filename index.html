@@ -102,12 +102,13 @@
           </div>
           <div class="text-center">
             <button type="submit" name="resolve_dns" class="btn btn-primary mr-2">Resolve DNS to IP</button>
-            <button type="submit" name="resolve_ip" class="btn btn-primary">Resolve IP to DNS</button>
+            <button type="submit" name="resolve_ip" class="btn btn-primary mr-2">Resolve IP to DNS</button>
+            <button type="submit" name="find_duplicates" class="btn btn-primary">Find Duplicate IPs</button>
           </div>
         </form>
 
         <!-- Display Results or Errors for DNS/IP Resolver -->
-        {% if request.method == 'POST' and ('resolve_dns' in request.form or 'resolve_ip' in request.form) %}
+        {% if request.method == 'POST' and ('resolve_dns' in request.form or 'resolve_ip' in request.form or 'find_duplicates' in request.form) %}
           {% if error %}
             <div class="alert alert-danger mt-4" role="alert">
               <strong>Error:</strong> {{ error }}
@@ -116,7 +117,8 @@
           {% if result %}
             <div class="result-box mt-4">
               <h3>Result:</h3>
-              <p class="lead">{{ result }}</p>
+              <p class="lead" id="result-text">{{ result }}</p>
+              <button id="copy-results" class="btn btn-primary">Copy Results</button>
             </div>
           {% endif %}
         {% endif %}
@@ -152,7 +154,8 @@
           {% if result %}
             <div class="result-box mt-4">
               <h3>Result:</h3>
-              <p class="lead">{{ result }}</p>
+              <p class="lead" id="result-text">{{ result }}</p>
+              <button id="copy-results" class="btn btn-primary">Copy Results</button>
             </div>
           {% endif %}
         {% endif %}
@@ -164,5 +167,19 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Copy Results Script -->
+  <script>
+    document.getElementById('copy-results').addEventListener('click', function () {
+      const resultText = document.getElementById('result-text').innerText;
+      navigator.clipboard.writeText(resultText)
+        .then(() => {
+          alert('Results copied to clipboard!');
+        })
+        .catch(() => {
+          alert('Failed to copy results.');
+        });
+    });
+  </script>
 </body>
 </html>
